@@ -41,6 +41,17 @@ function App() {
     }
   };
 
+  const reEditTodoName = (id, name) => {
+    const thirdNewTodos = [...todos];
+    const thirdNewTodo = thirdNewTodos.find((thirdNewTodo) => thirdNewTodo.id === id);
+    thirdNewTodo.name = name;
+    setTodos(thirdNewTodos);
+  };
+
+  const handleTagBlur = () => {
+    console.log("hello");
+  };
+
   return (
     <div className="App">
       <h1>todos</h1>
@@ -49,13 +60,16 @@ function App() {
           type="text"
           className="newInput"
           placeholder="What needs to be done?"
-          onKeyPress={handleAddTodo}
+          onKeyDown={handleAddTodo}
           ref={todoNameRef}
+          onBlur={handleTagBlur}
+          autoFocus
         />
         <TodoList
           todos={todos}
           watchingCheckBox={watchingCheckBox}
           handleRemoveTodo={handleRemoveTodo}
+          reEditTodoName={reEditTodoName}
         />
 
         <div className="linkBarContainer">
