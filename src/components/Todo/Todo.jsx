@@ -1,9 +1,13 @@
 import React from "react";
 import "./Todo.css";
 
-function Todo({ todo, watchingCheckBox }) {
+function Todo({ todo, watchingCheckBox, handleRemoveTodo }) {
   const handleTodoClick = () => {
     watchingCheckBox(todo.id);
+  };
+
+  const handleRemoveClick = () => {
+    handleRemoveTodo(todo.id);
   };
 
   return (
@@ -16,10 +20,12 @@ function Todo({ todo, watchingCheckBox }) {
             readOnly
             onChange={handleTodoClick}
           />
+          <div>{todo.name}</div>
         </label>
-        {todo.name}
       </div>
-      <button className="removeButton">x</button>
+      <button className="removeButton" onClick={handleRemoveClick}>
+        x
+      </button>
     </div>
   );
 }

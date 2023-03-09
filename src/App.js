@@ -28,6 +28,19 @@ function App() {
     setTodos(newTodos);
   };
 
+  const handleRemoveTodo = (id) => {
+    const secondNewTodos = [...todos];
+    // [{ id:1234, name:"eat dinner", isCompleted:true},{},{}]
+    const secondNewTodo = secondNewTodos.find(
+      (secondNewTodo) => secondNewTodo.id === id
+    );
+    const indexOfRemove = secondNewTodos.indexOf(secondNewTodo);
+    if (indexOfRemove !== -1) {
+      secondNewTodos.splice(indexOfRemove, 1);
+      setTodos(secondNewTodos);
+    }
+  };
+
   return (
     <div className="App">
       <h1>todos</h1>
@@ -39,7 +52,11 @@ function App() {
           onKeyPress={handleAddTodo}
           ref={todoNameRef}
         />
-        <TodoList todos={todos} watchingCheckBox={watchingCheckBox} />
+        <TodoList
+          todos={todos}
+          watchingCheckBox={watchingCheckBox}
+          handleRemoveTodo={handleRemoveTodo}
+        />
 
         <div className="linkBarContainer">
           <div className="itemNumber">
