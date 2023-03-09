@@ -1,27 +1,30 @@
 .toDoControler {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 90% 10%;
   border: 0.5px solid #d8d4d4;
 }
 
 .writtenTaskContainer {
-  padding: 20px;
+  display: grid;
+  grid-template-columns: 10% 90%;
 }
 
-label {
-  padding-right: 10px;
+.writtenTaskContainer input {
+  margin-right: 10px 20px 10px 10px;
+}
+
+.writtenTaskContainer label {
+  padding: 20px 0 20px 10px;
 }
 
 .removeButton {
   top: 0;
-  right: 10px;
   bottom: 0;
   width: 40px;
   height: 40px;
   margin: auto 0;
   font-size: 30px;
   color: #cc9a9a;
-  margin-right: 20px;
   border-radius: 50%;
   border: none;
 }
