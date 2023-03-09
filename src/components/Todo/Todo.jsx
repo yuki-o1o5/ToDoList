@@ -13,10 +13,18 @@ function Todo({ todo, watchingCheckBox, handleRemoveTodo, reEditTodoName }) {
     handleRemoveTodo(todo.id);
   };
 
-  const reEdit = (event) => {
-    if (labelRef.current.textContent.length > 0 && event.key === "Enter") {
+  const reEdit = () => {
+    if (labelRef.current.textContent.length === 0) {
+      handleRemoveTodo(todo.id);
+    } else {
       const reEditName = labelRef.current.textContent;
       reEditTodoName(todo.id, reEditName);
+    }
+  };
+
+  const preventDefault = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
     }
   };
 
@@ -32,8 +40,9 @@ function Todo({ todo, watchingCheckBox, handleRemoveTodo, reEditTodoName }) {
         <label
           contentEditable={true}
           suppressContentEditableWarning={true}
-          onKeyDown={reEdit}
+          onBlur={reEdit}
           ref={labelRef}
+          onKeyDown={preventDefault}
         >
           {todo.name}
         </label>
