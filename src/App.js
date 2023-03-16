@@ -6,11 +6,14 @@ import "./App.css";
 function App() {
   const [todos, setTodos] = useState([]);
 
+  const [filterType, setFilterType] = useState("all");
+
   const todoNameRef = useRef();
 
   const handleAddTodo = (event) => {
     if (todoNameRef.current.value.length > 0 && event.key === "Enter") {
       const myListName = todoNameRef.current.value;
+      // use spread operater.
       setTodos((prevTodos) => {
         return [
           ...prevTodos,
@@ -35,6 +38,7 @@ function App() {
       (secondNewTodo) => secondNewTodo.id === id
     );
     const indexOfRemove = secondNewTodos.indexOf(secondNewTodo);
+    // If to-do item is found, remove the element from the array.
     if (indexOfRemove !== -1) {
       secondNewTodos.splice(indexOfRemove, 1);
       setTodos(secondNewTodos);
@@ -43,13 +47,30 @@ function App() {
 
   const reEditTodoName = (id, name) => {
     const thirdNewTodos = [...todos];
-    const thirdNewTodo = thirdNewTodos.find((thirdNewTodo) => thirdNewTodo.id === id);
+    const thirdNewTodo = thirdNewTodos.find(
+      (thirdNewTodo) => thirdNewTodo.id === id
+    );
     thirdNewTodo.name = name;
     setTodos(thirdNewTodos);
   };
 
-  const handleTagBlur = () => {
-    console.log("hello");
+  let filteredTodos = todos;
+  if (filterType === "active") {
+    filteredTodos = todos.filter((todo) => !todo.isCompleted);
+  } else if (filterType === "completed") {
+    filteredTodos = todos.filter((todo) => todo.isCompleted);
+  }
+
+  const clickAll = () => {
+    setFilterType("all");
+  };
+
+  const clickActivities = () => {
+    setFilterType("active");
+  };
+
+  const clickCompleted = () => {
+    setFilterType("completed");
   };
 
   return (
@@ -62,24 +83,29 @@ function App() {
           placeholder="What needs to be done?"
           onKeyDown={handleAddTodo}
           ref={todoNameRef}
-          onBlur={handleTagBlur}
           autoFocus
         />
         <TodoList
-          todos={todos}
+          todos={filteredTodos}
           watchingCheckBox={watchingCheckBox}
           handleRemoveTodo={handleRemoveTodo}
           reEditTodoName={reEditTodoName}
         />
 
-        <div className="linkBarContainer">
+        <div className="footerContainer">
           <div className="itemNumber">
             {todos.filter((todo) => !todo.isCompleted).length} tasks
           </div>
-          <div className="linkContainer">
-            <button className="linkButton">All</button>
-            <button className="linkButton">Actives</button>
-            <button className="linkButton">Completed</button>
+          <div className="buttonContainer">
+            <button className="button" onClick={clickAll}>
+              All
+            </button>
+            <button className="button" onClick={clickActivities}>
+              Actives
+            </button>
+            <button className="button" onClick={clickCompleted}>
+              Completed
+            </button>
           </div>
         </div>
       </div>
