@@ -1,3 +1,4 @@
+import { HiOutlineXMark } from "react-icons/hi2";
 import React from "react";
 import { useRef } from "react";
 import "./Todo.css";
@@ -48,7 +49,7 @@ function Todo({ todo, watchingCheckBox, handleRemoveTodo, reEditTodoName }) {
         </label>
       </div>
       <button className="removeButton" onClick={handleRemoveClick}>
-        x
+        <HiOutlineXMark  />
       </button>
     </div>
   );
