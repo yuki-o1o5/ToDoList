@@ -1,3 +1,7 @@
+body {
+  color: rgb(55, 55, 55);
+}
+
 h1 {
   color: #c99599;
   text-align: center;
@@ -15,8 +19,9 @@ h1 {
 }
 
 .newInput {
+  color: rgb(55, 55, 55);
   font-size: 20px;
-  padding: 16px 16px 16px 40px;
+  padding: 16px 16px 16px 55px;
   border: 0.5px solid #d8d4d4;
 }
 
@@ -39,8 +44,21 @@ h1 {
   justify-content: space-around;
 }
 
-.linkButton {
+.button {
+  font-size: 16px;
   padding: 5px 10px;
   border: none;
   background-color: transparent;
+  cursor: pointer;
+  color: rgb(55, 55, 55);
+}
+
+.button:hover {
+  border: 1px solid #c99599;
+  border-radius: 5px;
+}
+
+.button:active {
+  border: 1px solid #c99599;
+  border-radius: 5px;
 }
