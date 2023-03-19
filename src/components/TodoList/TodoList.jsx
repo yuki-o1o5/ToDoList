@@ -1,7 +1,9 @@
+import { HiOutlineXMark } from "react-icons/hi2";
 import React from "react";
-import Todo from "../Todo/Todo";
+import { useRef } from "react";
+import "./TodoList.css";
 
-function TodoList({
+export function TodoList({
   todos,
   watchingCheckBox,
   handleRemoveTodo,
@@ -18,4 +20,59 @@ function TodoList({
   ));
 }
 
-export default TodoList;
+export function Todo({
+  todo,
+  watchingCheckBox,
+  handleRemoveTodo,
+  reEditTodoName,
+}) {
+  const labelRef = useRef();
+
+  const handleTodoClick = () => {
+    watchingCheckBox(todo.id);
+  };
+
+  const handleRemoveClick = () => {
+    handleRemoveTodo(todo.id);
+  };
+
+  const reEdit = () => {
+    if (labelRef.current.textContent.length === 0) {
+      handleRemoveTodo(todo.id);
+    } else {
+      const reEditName = labelRef.current.textContent;
+      reEditTodoName(todo.id, reEditName);
+    }
+  };
+
+  const preventDefault = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
+  };
+
+  return (
+    <div className="toDoControler">
+      <div className="writtenTaskContainer">
+        <input
+          type="checkbox"
+          checked={todo.isCompleted}
+          readOnly
+          onChange={handleTodoClick}
+        />{" "}
+        <label
+          contentEditable={true}
+          suppressContentEditableWarning={true}
+          onBlur={reEdit}
+          ref={labelRef}
+          onKeyDown={preventDefault}
+        >
+          {todo.name}
+        </label>
+      </div>
+      <button className="removeButton" onClick={handleRemoveClick}>
+        <HiOutlineXMark />
+      </button>
+    </div>
+  );
+}
