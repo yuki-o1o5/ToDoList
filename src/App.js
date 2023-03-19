@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState, useRef } from "react";
-import TodoList from "./components/TodoList/TodoList";
+import { TodoList } from "./components/TodoList/TodoList";
 import "./App.css";
 
 function App() {
@@ -94,7 +94,11 @@ function App() {
 
         <div className="footerContainer">
           <div className="itemNumber">
-            {todos.filter((todo) => !todo.isCompleted).length} tasks
+            {todos.filter((todo) => !todo.isCompleted).length < 2
+              ? `${todos.filter((todo) => !todo.isCompleted).length} task left`
+              : `${
+                  todos.filter((todo) => !todo.isCompleted).length
+                } tasks left `}
           </div>
           <div className="buttonContainer">
             <button className="button" onClick={clickAll}>
