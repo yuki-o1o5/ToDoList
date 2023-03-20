@@ -1,47 +1,46 @@
 import { HiOutlineXMark } from "react-icons/hi2";
-import React from "react";
+import React, { useContext } from "react";
 import { useRef } from "react";
 import "./TodoList.css";
+import AuthContext from "../../constants/filteredTodosContextApi";
+import TodosContext from "../../constants/todosContetApi";
 
 export function TodoList({
-  todos,
   watchingCheckBox,
   handleRemoveTodo,
   reEditTodoName,
 }) {
-  return todos.map((todo) => (
-    <Todo
-      todo={todo}
-      key={todo.id}
-      watchingCheckBox={watchingCheckBox}
-      handleRemoveTodo={handleRemoveTodo}
-      reEditTodoName={reEditTodoName}
-    />
+  const filteredTodos = useContext(AuthContext);
+
+  return filteredTodos.map((todo) => (
+    <TodosContext.Provider value={todo}>
+      <Todo
+        watchingCheckBox={watchingCheckBox}
+        handleRemoveTodo={handleRemoveTodo}
+        reEditTodoName={reEditTodoName}
+      />
+    </TodosContext.Provider>
   ));
 }
 
-export function Todo({
-  todo,
-  watchingCheckBox,
-  handleRemoveTodo,
-  reEditTodoName,
-}) {
+export function Todo({ watchingCheckBox, handleRemoveTodo, reEditTodoName }) {
+  const todos = useContext(TodosContext);
   const labelRef = useRef();
 
   const handleTodoClick = () => {
-    watchingCheckBox(todo.id);
+    watchingCheckBox(todos.id);
   };
 
   const handleRemoveClick = () => {
-    handleRemoveTodo(todo.id);
+    handleRemoveTodo(todos.id);
   };
 
   const reEdit = () => {
     if (labelRef.current.textContent.length === 0) {
-      handleRemoveTodo(todo.id);
+      handleRemoveTodo(todos.id);
     } else {
       const reEditName = labelRef.current.textContent;
-      reEditTodoName(todo.id, reEditName);
+      reEditTodoName(todos.id, reEditName);
     }
   };
 
@@ -56,7 +55,7 @@ export function Todo({
       <div className="writtenTaskContainer">
         <input
           type="checkbox"
-          checked={todo.isCompleted}
+          checked={todos.isCompleted}
           readOnly
           onChange={handleTodoClick}
         />{" "}
@@ -67,7 +66,7 @@ export function Todo({
           ref={labelRef}
           onKeyDown={preventDefault}
         >
-          {todo.name}
+          {todos.name}
         </label>
       </div>
       <button className="removeButton" onClick={handleRemoveClick}>

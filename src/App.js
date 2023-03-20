@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState, useRef } from "react";
 import { TodoList } from "./components/TodoList/TodoList";
+import AuthContext from "./constants/filteredTodosContextApi";
 import "./App.css";
 
 function App() {
@@ -13,7 +14,6 @@ function App() {
   const handleAddTodo = (event) => {
     if (todoNameRef.current.value.length > 0 && event.key === "Enter") {
       const myListName = todoNameRef.current.value;
-      // use spread operater.
       setTodos((prevTodos) => {
         return [
           ...prevTodos,
@@ -85,12 +85,13 @@ function App() {
           ref={todoNameRef}
           autoFocus
         />
-        <TodoList
-          todos={filteredTodos}
-          watchingCheckBox={watchingCheckBox}
-          handleRemoveTodo={handleRemoveTodo}
-          reEditTodoName={reEditTodoName}
-        />
+        <AuthContext.Provider value={filteredTodos}>
+          <TodoList
+            watchingCheckBox={watchingCheckBox}
+            handleRemoveTodo={handleRemoveTodo}
+            reEditTodoName={reEditTodoName}
+          />
+        </AuthContext.Provider>
 
         <div className="footerContainer">
           <div className="itemNumber">
