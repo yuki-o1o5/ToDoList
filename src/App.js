@@ -1,10 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState, useRef } from "react";
+import { createContext } from "react";
 import { TodoList } from "./components/TodoList/TodoList";
-import FilteredTodosContext from "./constants/filteredTodosContextApi";
 import "./App.css";
 
-function App() {
+export const FilteredTodosContext = createContext();
+
+export function App() {
   const [todos, setTodos] = useState([]);
 
   const [filterType, setFilterType] = useState("all");
@@ -134,5 +136,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

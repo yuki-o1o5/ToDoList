@@ -1,9 +1,10 @@
 import { HiOutlineXMark } from "react-icons/hi2";
-import React, { useContext } from "react";
+import React, { useContext, createContext } from "react";
+import { FilteredTodosContext } from "../../App";
 import { useRef } from "react";
 import "./TodoList.css";
-import FilteredTodosContext from "../../constants/filteredTodosContextApi";
-import TodosContext from "../../constants/todosContetApi";
+
+const TodosContext = createContext();
 
 export function TodoList() {
   const { filteredTodos } = useContext(FilteredTodosContext);
