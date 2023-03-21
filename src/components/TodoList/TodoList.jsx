@@ -9,7 +9,7 @@ export function TodoList() {
   const { filteredTodos } = useContext(FilteredTodosContext);
 
   return filteredTodos.map((todo) => (
-    <TodosContext.Provider value={todo}>
+    <TodosContext.Provider value={todo} key={todo.id}>
       <Todo />
     </TodosContext.Provider>
   ));
