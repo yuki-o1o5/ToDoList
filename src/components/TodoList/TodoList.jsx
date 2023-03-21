@@ -2,7 +2,7 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import React, { useContext } from "react";
 import { useRef } from "react";
 import "./TodoList.css";
-import AuthContext from "../../constants/filteredTodosContextApi";
+import filteredTodosContext from "../../constants/filteredTodosContextApi";
 import TodosContext from "../../constants/todosContetApi";
 
 export function TodoList({
@@ -10,7 +10,7 @@ export function TodoList({
   handleRemoveTodo,
   reEditTodoName,
 }) {
-  const filteredTodos = useContext(AuthContext);
+  const filteredTodos = useContext(filteredTodosContext);
 
   return filteredTodos.map((todo) => (
     <TodosContext.Provider value={todo}>
