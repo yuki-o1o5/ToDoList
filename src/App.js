@@ -85,12 +85,15 @@ function App() {
           ref={todoNameRef}
           autoFocus
         />
-        <filteredTodosContext.Provider value={filteredTodos}>
-          <TodoList
-            watchingCheckBox={watchingCheckBox}
-            handleRemoveTodo={handleRemoveTodo}
-            reEditTodoName={reEditTodoName}
-          />
+        <filteredTodosContext.Provider
+          value={{
+            filteredTodos,
+            watchingCheckBox,
+            handleRemoveTodo,
+            reEditTodoName,
+          }}
+        >
+          <TodoList />
         </filteredTodosContext.Provider>
 
         <div className="footerContainer">

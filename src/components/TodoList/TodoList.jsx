@@ -5,26 +5,22 @@ import "./TodoList.css";
 import filteredTodosContext from "../../constants/filteredTodosContextApi";
 import TodosContext from "../../constants/todosContetApi";
 
-export function TodoList({
-  watchingCheckBox,
-  handleRemoveTodo,
-  reEditTodoName,
-}) {
-  const filteredTodos = useContext(filteredTodosContext);
+export function TodoList() {
+  const { filteredTodos } = useContext(filteredTodosContext);
 
   return filteredTodos.map((todo) => (
     <TodosContext.Provider value={todo}>
-      <Todo
-        watchingCheckBox={watchingCheckBox}
-        handleRemoveTodo={handleRemoveTodo}
-        reEditTodoName={reEditTodoName}
-      />
+      <Todo />
     </TodosContext.Provider>
   ));
 }
 
-export function Todo({ watchingCheckBox, handleRemoveTodo, reEditTodoName }) {
+export function Todo() {
   const todos = useContext(TodosContext);
+
+  const { watchingCheckBox, handleRemoveTodo, reEditTodoName } =
+    useContext(filteredTodosContext);
+
   const labelRef = useRef();
 
   const handleTodoClick = () => {
