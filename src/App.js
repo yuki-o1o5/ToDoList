@@ -9,6 +9,8 @@ function App() {
 
   const [filterType, setFilterType] = useState("all");
 
+  const [activeId, setActiveId] = useState(null);
+
   const todoNameRef = useRef();
 
   const handleAddTodo = (event) => {
@@ -63,14 +65,17 @@ function App() {
 
   const clickAll = () => {
     setFilterType("all");
+    setActiveId("all");
   };
 
   const clickActivities = () => {
     setFilterType("active");
+    setActiveId("active");
   };
 
   const clickCompleted = () => {
     setFilterType("completed");
+    setActiveId("completed");
   };
 
   return (
@@ -105,13 +110,22 @@ function App() {
                 } tasks left `}
           </div>
           <div className="buttonContainer">
-            <button className="button" onClick={clickAll}>
+            <button
+              className={activeId === "all" ? "button active" : "button"}
+              onClick={clickAll}
+            >
               All
             </button>
-            <button className="button" onClick={clickActivities}>
+            <button
+              className={activeId === "active" ? "button active" : "button"}
+              onClick={clickActivities}
+            >
               Actives
             </button>
-            <button className="button" onClick={clickCompleted}>
+            <button
+              className={activeId === "completed" ? "button active" : "button"}
+              onClick={clickCompleted}
+            >
               Completed
             </button>
           </div>

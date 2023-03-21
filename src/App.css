@@ -53,12 +53,7 @@ h1 {
   color: rgb(55, 55, 55);
 }
 
-.button:hover {
-  border: 1px solid #c99599;
-  border-radius: 5px;
-}
-
-.button:active {
+.button.active {
   border: 1px solid #c99599;
   border-radius: 5px;
 }
