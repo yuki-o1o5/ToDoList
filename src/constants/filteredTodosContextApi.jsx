@@ -1,5 +1,5 @@
 import { createContext } from "react";
 
-const filteredTodosContext = createContext();
+const FilteredTodosContext = createContext();
 
-export default filteredTodosContext;
+export default FilteredTodosContext;

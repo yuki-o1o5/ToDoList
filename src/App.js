@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState, useRef } from "react";
 import { TodoList } from "./components/TodoList/TodoList";
-import filteredTodosContext from "./constants/filteredTodosContextApi";
+import FilteredTodosContext from "./constants/filteredTodosContextApi";
 import "./App.css";
 
 function App() {
@@ -85,7 +85,7 @@ function App() {
           ref={todoNameRef}
           autoFocus
         />
-        <filteredTodosContext.Provider
+        <FilteredTodosContext.Provider
           value={{
             filteredTodos,
             watchingCheckBox,
@@ -94,7 +94,7 @@ function App() {
           }}
         >
           <TodoList />
-        </filteredTodosContext.Provider>
+        </FilteredTodosContext.Provider>
 
         <div className="footerContainer">
           <div className="itemNumber">

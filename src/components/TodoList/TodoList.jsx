@@ -2,11 +2,11 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import React, { useContext } from "react";
 import { useRef } from "react";
 import "./TodoList.css";
-import filteredTodosContext from "../../constants/filteredTodosContextApi";
+import FilteredTodosContext from "../../constants/filteredTodosContextApi";
 import TodosContext from "../../constants/todosContetApi";
 
 export function TodoList() {
-  const { filteredTodos } = useContext(filteredTodosContext);
+  const { filteredTodos } = useContext(FilteredTodosContext);
 
   return filteredTodos.map((todo) => (
     <TodosContext.Provider value={todo}>
@@ -19,7 +19,7 @@ export function Todo() {
   const todos = useContext(TodosContext);
 
   const { watchingCheckBox, handleRemoveTodo, reEditTodoName } =
-    useContext(filteredTodosContext);
+    useContext(FilteredTodosContext);
 
   const labelRef = useRef();
 
