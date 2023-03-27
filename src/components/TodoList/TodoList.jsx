@@ -1,46 +1,89 @@
+// import { useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
-import React, { useContext, createContext } from "react";
-import { FilteredTodosContext } from "../../App";
-import { useRef } from "react";
+import React, { useContext } from "react";
+import { AppContext } from "../../App";
+// import { useRef } from "react";
 import "./TodoList.css";
 
-const TodosContext = createContext();
+export function TodoList({ allTodos }) {
+  // const { todos } = useContext(AppContext);
 
-export function TodoList() {
-  const { filteredTodos } = useContext(FilteredTodosContext);
+  // filter: active, all, completed
 
-  return filteredTodos.map((todo) => (
-    <TodosContext.Provider value={todo} key={todo.id}>
-      <Todo />
-    </TodosContext.Provider>
-  ));
+  // todo.status: active, completed
+
+  // return todos.filter((todo) => (
+  //   if (filter === 'all') {
+  //     return <Todo todo={todo} />
+  //   }
+  //   if (filter === todo.status) {
+  //     return <Todo todo={todo} />
+  //   }
+
+  // ));
+  return (
+    <>
+      {allTodos.map((eachTodo) => {
+        return <Todo eachTodo={eachTodo} key={eachTodo.id} />;
+      })}
+    </>
+  );
 }
 
-export function Todo() {
-  const todos = useContext(TodosContext);
+function Todo({ eachTodo }) {
+  const { todos, setTodos } = useContext(AppContext);
 
-  const { watchingCheckBox, handleRemoveTodo, reEditTodoName } =
-    useContext(FilteredTodosContext);
-
-  const labelRef = useRef();
-
-  const handleTodoClick = () => {
-    watchingCheckBox(todos.id);
+  // ----------------------------------------------------------------
+  // Remove Todo task (Current todo matches one of the todos from AppContext and remove from todos)
+  // ----------------------------------------------------------------
+  const handleRemove = (id) => {
+    const updatedTodosByRemove = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodosByRemove);
   };
 
-  const handleRemoveClick = () => {
-    handleRemoveTodo(todos.id);
-  };
+  //   // custom hooks -> update todos
+  //   todos = todos.filter((todo) => todo.id !== id);
+  // }
 
-  const reEdit = () => {
-    if (labelRef.current.textContent.length === 0) {
-      handleRemoveTodo(todos.id);
+  // const handleToggleActive = () => {
+  //   todos = todos.map((todo) => {
+  //     if (todo.id === id) {
+  //       todo.status = 'active';
+  //     }
+  //   });
+
+  //   updateTodos(todos);
+
+  // }
+
+  // const todos = useContext(TodosContext);
+
+  // const { watchingCheckBox, handleRemoveTodo, reEditTodoName } =
+  //   useContext(FilteredTodosContext);
+
+  // const labelRef = useRef();
+
+  // const handleTodoClick = () => {
+  //   watchingCheckBox(todos.id);
+  // };
+  // ----------------------------------------------------------------
+  // reedit Todo task
+  // ----------------------------------------------------------------
+  const reEditTask = (event) => {
+    if (event.target.textContent.length === 0) {
+      handleRemove(eachTodo.id);
     } else {
-      const reEditName = labelRef.current.textContent;
-      reEditTodoName(todos.id, reEditName);
+      const reEditTaskName = event.target.textContent;
+      const updatedTodosByReEdit = todos.map((todo) =>
+        todo.id === eachTodo.id ? { ...todo, name: reEditTaskName } : todo
+      );
+      setTodos(updatedTodosByReEdit);
     }
   };
 
+  // ----------------------------------------------------------------
+  // Prevent line break when I click the enter key
+  // ----------------------------------------------------------------
   const preventDefault = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -52,21 +95,22 @@ export function Todo() {
       <div className="writtenTaskContainer">
         <input
           type="checkbox"
-          checked={todos.isCompleted}
-          readOnly
-          onChange={handleTodoClick}
-        />{" "}
+          // onChange={handleCheckBox()}
+        />
         <label
           contentEditable={true}
           suppressContentEditableWarning={true}
-          onBlur={reEdit}
-          ref={labelRef}
+          onBlur={(event) => reEditTask(event)}
+          // ref={labelRef}
           onKeyDown={preventDefault}
         >
-          {todos.name}
+          {eachTodo.name}
         </label>
       </div>
-      <button className="removeButton" onClick={handleRemoveClick}>
+      <button
+        className="removeButton"
+        onClick={() => handleRemove(eachTodo.id)}
+      >
         <HiOutlineXMark />
       </button>
     </div>
