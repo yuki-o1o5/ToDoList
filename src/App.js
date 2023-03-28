@@ -10,9 +10,6 @@ export function App() {
   const [todos, setTodos] = useState([]);
 
   const contextValue = { todos, setTodos };
-  // const [filterType, setFilterType] = useState("all");
-
-  // const [activeId, setActiveId] = useState(null);
 
   const handleAddTodo = (event) => {
     if (event.target.value.length > 0 && event.key === "Enter") {
@@ -28,35 +25,6 @@ export function App() {
     }
   };
 
-  // const watchingCheckBox = (id) => {
-  //   const newTodos = [...todos];
-  //   const newTodo = newTodos.find((newTodo) => newTodo.id === id);
-  //   newTodo.isCompleted = !newTodo.isCompleted;
-  //   setTodos(newTodos);
-  // };
-
-  // let filteredTodos = todos;
-  // if (filterType === "active") {
-  //   filteredTodos = todos.filter((todo) => !todo.isCompleted);
-  // } else if (filterType === "completed") {
-  //   filteredTodos = todos.filter((todo) => todo.isCompleted);
-  // }
-
-  // const clickAll = () => {
-  //   setFilterType("all");
-  //   setActiveId("all");
-  // };
-
-  // const clickActivities = () => {
-  //   setFilterType("active");
-  //   setActiveId("active");
-  // };
-
-  // const clickCompleted = () => {
-  //   setFilterType("completed");
-  //   setActiveId("completed");
-  // };
-
   return (
     <div className="App">
       <h1>todos</h1>
@@ -68,12 +36,6 @@ export function App() {
           onKeyDown={handleAddTodo}
           autoFocus
         />
-        {/* <FilteredTodosContext.Provider
-          value={{
-            filteredTodos,
-            watchingCheckBox,
-          }}
-        > */}
         <AppContext.Provider value={contextValue}>
           <TodoList allTodos={todos} />
         </AppContext.Provider>
@@ -111,3 +73,29 @@ export function App() {
     </div>
   );
 }
+
+// const [filterType, setFilterType] = useState("all");
+
+// const [activeId, setActiveId] = useState(null);
+
+// let filteredTodos = todos;
+// if (filterType === "active") {
+//   filteredTodos = todos.filter((todo) => !todo.isCompleted);
+// } else if (filterType === "completed") {
+//   filteredTodos = todos.filter((todo) => todo.isCompleted);
+// }
+
+// const clickAll = () => {
+//   setFilterType("all");
+//   setActiveId("all");
+// };
+
+// const clickActivities = () => {
+//   setFilterType("active");
+//   setActiveId("active");
+// };
+
+// const clickCompleted = () => {
+//   setFilterType("completed");
+//   setActiveId("completed");
+// };
