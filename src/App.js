@@ -10,9 +10,12 @@ export const AppContext = createContext();
 export function App() {
   const [todos, setTodos] = useState([]);
   const [status, setStatus] = useState(null);
+  const [buttonClassName, setbuttonClassName] = useState(null);
+  const contextValue = { todos, setTodos };
 
-  const contextValue = { todos, setTodos};
-
+  // ----------------------------------------------------------------
+  // Create new task
+  // ----------------------------------------------------------------
   const handleAddTodo = (event) => {
     if (event.target.value.length > 0 && event.key === "Enter") {
       let myListName = event.target.value;
@@ -26,17 +29,30 @@ export function App() {
     }
   };
 
+  // ----------------------------------------------------------------
+  // Set the status when I click the button
+  // ----------------------------------------------------------------
+
   const clickAll = () => {
     setStatus(null);
+    setbuttonClassName("all");
   };
 
   const clickActive = () => {
     setStatus("active");
+    setbuttonClassName("active");
   };
 
   const clickCompleted = () => {
     setStatus("completed");
+    setbuttonClassName("completed");
   };
+
+  // ----------------------------------------------------------------
+  // Change todos by the status
+  // todos.isCompleted = false => "active"
+  // todos.isCompleted = true  => "completed"
+  // ----------------------------------------------------------------
 
   const filteredTodos = todos.filter((todo) => {
     if (status === "active") {
@@ -70,9 +86,28 @@ export function App() {
                 } tasks left `}
           </div>
           <div className="buttonContainer">
-            <button onClick={clickAll}>All</button>
-            <button onClick={clickActive}>Actives</button>
-            <button onClick={clickCompleted}>Completed</button>
+            <button
+              className={buttonClassName === "all" ? "button active" : "button"}
+              onClick={clickAll}
+            >
+              All
+            </button>
+            <button
+              className={
+                buttonClassName === "active" ? "button active" : "button"
+              }
+              onClick={clickActive}
+            >
+              Actives
+            </button>
+            <button
+              className={
+                buttonClassName === "completed" ? "button active" : "button"
+              }
+              onClick={clickCompleted}
+            >
+              Completed
+            </button>
           </div>
         </div>
       </div>

@@ -88,7 +88,6 @@ function Todo({ eachTodo }) {
   );
 }
 
-
 //   // custom hooks -> update todos
 //   todos = todos.filter((todo) => todo.id !== id);
 // }
