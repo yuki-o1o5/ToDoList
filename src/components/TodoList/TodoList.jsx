@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { HiOutlineXMark } from "react-icons/hi2";
 import React, { useContext } from "react";
 import { AppContext } from "../../App";
@@ -16,7 +15,6 @@ export function TodoList({ allTodos }) {
 
 function Todo({ eachTodo }) {
   const { todos, setTodos } = useContext(AppContext);
-  const [isChecked, setIsChecked] = useState(false);
 
   // ----------------------------------------------------------------
   // Remove Todo task (Current todo matches one of the todos from AppContext and remove from todos)
@@ -27,15 +25,16 @@ function Todo({ eachTodo }) {
   };
 
   // ----------------------------------------------------------------
-  // Change Todo status ...????
+  // Change Todo status
   // ----------------------------------------------------------------
 
   const handleCheckBox = () => {
     const updatedTodosByToggle = todos.map((todo) =>
-      todo.id === eachTodo.id ? { ...todo, isCompleted: !isChecked } : todo
+      todo.id === eachTodo.id
+        ? { ...todo, isCompleted: !eachTodo.isCompleted }
+        : todo
     );
     setTodos(updatedTodosByToggle);
-    setIsChecked(!isChecked);
   };
 
   // ----------------------------------------------------------------
@@ -65,7 +64,11 @@ function Todo({ eachTodo }) {
   return (
     <div className="toDoControler">
       <div className="writtenTaskContainer">
-        <input type="checkbox" checked={isChecked} onChange={handleCheckBox} />
+        <input
+          type="checkbox"
+          checked={eachTodo.isCompleted}
+          onChange={handleCheckBox}
+        />
         <label
           contentEditable={true}
           suppressContentEditableWarning={true}
@@ -86,36 +89,7 @@ function Todo({ eachTodo }) {
 }
 
 
-// const { todos } = useContext(AppContext);
-
-// filter: active, all, completed
-
-// todo.status: active, completed
-
-// return todos.filter((todo) => (
-//   if (filter === 'all') {
-//     return <Todo todo={todo} />
-//   }
-//   if (filter === todo.status) {
-//     return <Todo todo={todo} />
-//   }
-
-// ));
-
 //   // custom hooks -> update todos
 //   todos = todos.filter((todo) => todo.id !== id);
 // }
 
-// const { watchingCheckBox, handleRemoveTodo, reEditTodoName } =
-//   useContext(FilteredTodosContext);
-
-// const handleTodoClick = () => {
-//   watchingCheckBox(todos.id);
-// };
-
-// const watchingCheckBox = (id) => {
-//   const newTodos = [...todos];
-//   const newTodo = newTodos.find((newTodo) => newTodo.id === id);
-//   newTodo.isCompleted = !newTodo.isCompleted;
-//   setTodos(newTodos);
-// };

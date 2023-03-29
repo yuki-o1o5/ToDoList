@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { createContext } from "react";
@@ -8,8 +9,9 @@ export const AppContext = createContext();
 
 export function App() {
   const [todos, setTodos] = useState([]);
+  const [status, setStatus] = useState(null);
 
-  const contextValue = { todos, setTodos };
+  const contextValue = { todos, setTodos};
 
   const handleAddTodo = (event) => {
     if (event.target.value.length > 0 && event.key === "Enter") {
@@ -17,13 +19,32 @@ export function App() {
       setTodos((prevTodos) => {
         return [
           ...prevTodos,
-          { id: uuidv4(), name: myListName, isCompleted: false, status: "all" },
+          { id: uuidv4(), name: myListName, isCompleted: false },
         ];
       });
       event.target.value = "";
-      console.log(todos);
     }
   };
+
+  const clickAll = () => {
+    setStatus(null);
+  };
+
+  const clickActive = () => {
+    setStatus("active");
+  };
+
+  const clickCompleted = () => {
+    setStatus("completed");
+  };
+
+  const filteredTodos = todos.filter((todo) => {
+    if (status === "active") {
+      return !todo.isCompleted;
+    } else if (status === "completed") {
+      return todo.isCompleted;
+    }
+  });
 
   return (
     <div className="App">
@@ -37,7 +58,7 @@ export function App() {
           autoFocus
         />
         <AppContext.Provider value={contextValue}>
-          <TodoList allTodos={todos} />
+          <TodoList allTodos={status === null ? todos : filteredTodos} />
         </AppContext.Provider>
 
         <div className="footerContainer">
@@ -49,53 +70,12 @@ export function App() {
                 } tasks left `}
           </div>
           <div className="buttonContainer">
-            <button
-            // className={activeId === "all" ? "button active" : "button"}
-            // onClick={clickAll}
-            >
-              All
-            </button>
-            <button
-            // className={activeId === "active" ? "button active" : "button"}
-            // onClick={clickActivities}
-            >
-              Actives
-            </button>
-            <button
-            // className={activeId === "completed" ? "button active" : "button"}
-            // onClick={clickCompleted}
-            >
-              Completed
-            </button>
+            <button onClick={clickAll}>All</button>
+            <button onClick={clickActive}>Actives</button>
+            <button onClick={clickCompleted}>Completed</button>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-// const [filterType, setFilterType] = useState("all");
-
-// const [activeId, setActiveId] = useState(null);
-
-// let filteredTodos = todos;
-// if (filterType === "active") {
-//   filteredTodos = todos.filter((todo) => !todo.isCompleted);
-// } else if (filterType === "completed") {
-//   filteredTodos = todos.filter((todo) => todo.isCompleted);
-// }
-
-// const clickAll = () => {
-//   setFilterType("all");
-//   setActiveId("all");
-// };
-
-// const clickActivities = () => {
-//   setFilterType("active");
-//   setActiveId("active");
-// };
-
-// const clickCompleted = () => {
-//   setFilterType("completed");
-//   setActiveId("completed");
-// };
