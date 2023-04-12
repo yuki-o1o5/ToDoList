@@ -5,7 +5,57 @@ import { createContext } from "react";
 import { TodoList } from "./components/TodoList/TodoList";
 import "./App.css";
 
-export const AppContext = createContext();
+export const AppContext = createContext({});
+
+const initialState = {
+  todos: [],
+  todosStatus: { status: 'all' }
+}
+
+const appStateReducer = (
+  state,
+  action,
+) => {
+  switch (action.type) {
+    case 'SET_FILTER':
+      const filteredTodos = state.todos.filter((todo) => {
+        if (state.todosStatus.status === "active") {
+          return !todo.isCompleted;
+        } else if (state.todosStatus.status === "completed") {
+          return todo.isCompleted;
+        }
+      });
+      return { todos: filteredTodos }
+    default:
+      return state;
+  }
+};
+
+
+// const AppContextProvider = ({children}) => {
+//   const [state, dispatch] = useReducer(appStateReducer, initialState);
+
+//   const setStatus = () => {
+
+//   }
+
+//   return (
+//    <AppContext.Contect value={todos: state.todos,setStatus}>
+//     {children}
+//    </AppContext.Contect> 
+//   )
+// }
+
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (context === null) {
+    throw new Error('useOrdersState must be used within a OrdersStateProvider');
+  }
+  return context;
+};
+
+
 
 export function App() {
   const [todos, setTodos] = useState([]);
@@ -13,6 +63,7 @@ export function App() {
   const [buttonClassName, setbuttonClassName] = useState(null);
   const contextValue = { todos, setTodos };
 
+  const [state, dispatch] = useReducer(appStateReducer, initialState);
   // ----------------------------------------------------------------
   // Create new task
   // ----------------------------------------------------------------
