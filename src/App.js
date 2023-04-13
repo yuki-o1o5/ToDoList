@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
+import { useState, useReducer } from "react";
 import { createContext } from "react";
 import { TodoList } from "./components/TodoList/TodoList";
 import "./App.css";
@@ -9,76 +9,70 @@ export const AppContext = createContext({});
 
 const initialState = {
   todos: [],
-  todosStatus: { status: 'all' }
-}
+  status: "",
+};
 
-const appStateReducer = (
-  state,
-  action,
-) => {
+const appStateReducer = (state, action) => {
   switch (action.type) {
-    case 'SET_FILTER':
-      const filteredTodos = state.todos.filter((todo) => {
-        if (state.todosStatus.status === "active") {
-          return !todo.isCompleted;
-        } else if (state.todosStatus.status === "completed") {
-          return todo.isCompleted;
-        }
-      });
-      return { todos: filteredTodos }
+    case "CREATE_TASK":
+      if (
+        action.content.target.value.length > 0 &&
+        action.content.key === "Enter"
+      ) {
+        let myListName = action.content.target.value;
+        const newTodo = { id: uuidv4(), name: myListName, isCompleted: false };
+        action.content.target.value = "";
+        return { todos: [...state.todos, newTodo] };
+      }
+
+    case "REMOVE_TASK":
+      const updatedTodosByRemove = state.todos.filter(
+        (todo) => todo.id !== action.content
+      );
+      return { todos: updatedTodosByRemove };
+
+    case "HANDLE_CHECKBOX":
+      const updatedTodosByToggle = state.todos.map((todo) =>
+        todo.id === action.content.id
+          ? { ...todo, isCompleted: !action.content.isCompleted }
+          : todo
+      );
+      return { todos: updatedTodosByToggle };
+
+    case "REEDIT_TASK":
+      if (action.content.target.textContent.length === 0) {
+        const updatedTodosByRemove = state.todos.filter(
+          (todo) => todo.id !== action.content2
+        );
+        return { todos: updatedTodosByRemove };
+      } else {
+        const reEditTaskName = action.content.target.textContent;
+        const updatedTodosByReEdit = state.todos.map((todo) =>
+          todo.id === action.content ? { todo, name: reEditTaskName } : todo
+        );
+        return { todos: updatedTodosByReEdit };
+      }
+
     default:
       return state;
   }
 };
 
+const AppContextProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(appStateReducer, initialState);
 
-// const AppContextProvider = ({children}) => {
-//   const [state, dispatch] = useReducer(appStateReducer, initialState);
-
-//   const setStatus = () => {
-
-//   }
-
-//   return (
-//    <AppContext.Contect value={todos: state.todos,setStatus}>
-//     {children}
-//    </AppContext.Contect> 
-//   )
-// }
-
-
-export const useAppContext = () => {
-  const context = useContext(AppContext);
-  if (context === null) {
-    throw new Error('useOrdersState must be used within a OrdersStateProvider');
-  }
-  return context;
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AppContext.Provider>
+  );
 };
-
-
 
 export function App() {
   const [todos, setTodos] = useState([]);
   const [status, setStatus] = useState(null);
   const [buttonClassName, setbuttonClassName] = useState(null);
   const contextValue = { todos, setTodos };
-
-  const [state, dispatch] = useReducer(appStateReducer, initialState);
-  // ----------------------------------------------------------------
-  // Create new task
-  // ----------------------------------------------------------------
-  const handleAddTodo = (event) => {
-    if (event.target.value.length > 0 && event.key === "Enter") {
-      let myListName = event.target.value;
-      setTodos((prevTodos) => {
-        return [
-          ...prevTodos,
-          { id: uuidv4(), name: myListName, isCompleted: false },
-        ];
-      });
-      event.target.value = "";
-    }
-  };
 
   // ----------------------------------------------------------------
   // Set the status when I click the button
@@ -105,28 +99,21 @@ export function App() {
   // todos.isCompleted = true  => "completed"
   // ----------------------------------------------------------------
 
-  const filteredTodos = todos.filter((todo) => {
-    if (status === "active") {
-      return !todo.isCompleted;
-    } else if (status === "completed") {
-      return todo.isCompleted;
-    }
-  });
+  // const filteredTodos = todos.filter((todo) => {
+  //   if (status === "active") {
+  //     return !todo.isCompleted;
+  //   } else if (status === "completed") {
+  //     return todo.isCompleted;
+  //   }
+  // });
 
   return (
     <div className="App">
       <h1>todos</h1>
       <div className="toDoContainer">
-        <input
-          type="text"
-          className="newInput"
-          placeholder="What needs to be done?"
-          onKeyDown={handleAddTodo}
-          autoFocus
-        />
-        <AppContext.Provider value={contextValue}>
-          <TodoList allTodos={status === null ? todos : filteredTodos} />
-        </AppContext.Provider>
+        <AppContextProvider value={contextValue}>
+          <TodoList />
+        </AppContextProvider>
 
         <div className="footerContainer">
           <div className="itemNumber">
@@ -165,3 +152,11 @@ export function App() {
     </div>
   );
 }
+
+// export const useAppContext = () => {
+//   const context = useContext(AppContext);
+//   if (context === null) {
+//     throw new Error("useOrdersState must be used within a OrdersStateProvider");
+//   }
+//   return context;
+// };
