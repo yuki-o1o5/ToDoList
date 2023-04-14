@@ -56,13 +56,13 @@ const appStateReducer = (state, action) => {
       }
 
     case "ClICK_ALL":
-      return { ...state, status: "all", buttonClassName: "all" };
+      return { ...state, status: "all" };
 
     case "ClICK_ACTIVE":
-      return { ...state, status: "active", buttonClassName: "active" };
+      return { ...state, status: "active" };
 
     case "ClICK_COMPLETED":
-      return { ...state, status: "completed", buttonClassName: "completed" };
+      return { ...state, status: "completed" };
 
     default:
       return state;
@@ -80,8 +80,6 @@ const AppContextProvider = ({ children }) => {
 };
 
 export function App() {
-  // const [todos, setTodos] = useState([]);
-
   return (
     <div className="App">
       <h1>todos</h1>

@@ -48,24 +48,20 @@ export function TodoList() {
         </div>
         <div className="buttonContainer">
           <button
-            className={
-              state.buttonClassName === "all" ? "button active" : "button"
-            }
+            className={state.status === "all" ? "button active" : "button"}
             onClick={() => dispatch({ type: "ClICK_ALL" })}
           >
             All
           </button>
           <button
-            className={
-              state.buttonClassName === "active" ? "button active" : "button"
-            }
+            className={state.status === "active" ? "button active" : "button"}
             onClick={() => dispatch({ type: "ClICK_ACTIVE" })}
           >
             Actives
           </button>
           <button
             className={
-              state.buttonClassName === "completed" ? "button active" : "button"
+              state.status === "completed" ? "button active" : "button"
             }
             onClick={() => dispatch({ type: "ClICK_COMPLETED" })}
           >
