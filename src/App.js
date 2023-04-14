@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 import { v4 as uuidv4 } from "uuid";
-import { useState, useReducer } from "react";
+import { useReducer } from "react";
 import { createContext } from "react";
 import { TodoList } from "./components/TodoList/TodoList";
 import "./App.css";
@@ -9,7 +9,8 @@ export const AppContext = createContext({});
 
 const initialState = {
   todos: [],
-  status: "",
+  status: "all",
+  buttonClassName: "all",
 };
 
 const appStateReducer = (state, action) => {
@@ -25,6 +26,7 @@ const appStateReducer = (state, action) => {
         return { todos: [...state.todos, newTodo] };
       }
 
+    // eslint-disable-next-line no-fallthrough
     case "REMOVE_TASK":
       const updatedTodosByRemove = state.todos.filter(
         (todo) => todo.id !== action.content
@@ -53,6 +55,15 @@ const appStateReducer = (state, action) => {
         return { todos: updatedTodosByReEdit };
       }
 
+    case "ClICK_ALL":
+      return { ...state, status: "all", buttonClassName: "all" };
+
+    case "ClICK_ACTIVE":
+      return { ...state, status: "active", buttonClassName: "active" };
+
+    case "ClICK_COMPLETED":
+      return { ...state, status: "completed", buttonClassName: "completed" };
+
     default:
       return state;
   }
@@ -69,85 +80,15 @@ const AppContextProvider = ({ children }) => {
 };
 
 export function App() {
-  const [todos, setTodos] = useState([]);
-  const [status, setStatus] = useState(null);
-  const [buttonClassName, setbuttonClassName] = useState(null);
-  const contextValue = { todos, setTodos };
-
-  // ----------------------------------------------------------------
-  // Set the status when I click the button
-  // ----------------------------------------------------------------
-
-  const clickAll = () => {
-    setStatus(null);
-    setbuttonClassName("all");
-  };
-
-  const clickActive = () => {
-    setStatus("active");
-    setbuttonClassName("active");
-  };
-
-  const clickCompleted = () => {
-    setStatus("completed");
-    setbuttonClassName("completed");
-  };
-
-  // ----------------------------------------------------------------
-  // Change todos by the status
-  // todos.isCompleted = false => "active"
-  // todos.isCompleted = true  => "completed"
-  // ----------------------------------------------------------------
-
-  // const filteredTodos = todos.filter((todo) => {
-  //   if (status === "active") {
-  //     return !todo.isCompleted;
-  //   } else if (status === "completed") {
-  //     return todo.isCompleted;
-  //   }
-  // });
+  // const [todos, setTodos] = useState([]);
 
   return (
     <div className="App">
       <h1>todos</h1>
       <div className="toDoContainer">
-        <AppContextProvider value={contextValue}>
+        <AppContextProvider>
           <TodoList />
         </AppContextProvider>
-
-        <div className="footerContainer">
-          <div className="itemNumber">
-            {todos.filter((todo) => !todo.isCompleted).length < 2
-              ? `${todos.filter((todo) => !todo.isCompleted).length} task left`
-              : `${
-                  todos.filter((todo) => !todo.isCompleted).length
-                } tasks left `}
-          </div>
-          <div className="buttonContainer">
-            <button
-              className={buttonClassName === "all" ? "button active" : "button"}
-              onClick={clickAll}
-            >
-              All
-            </button>
-            <button
-              className={
-                buttonClassName === "active" ? "button active" : "button"
-              }
-              onClick={clickActive}
-            >
-              Actives
-            </button>
-            <button
-              className={
-                buttonClassName === "completed" ? "button active" : "button"
-              }
-              onClick={clickCompleted}
-            >
-              Completed
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
