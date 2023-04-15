@@ -2,6 +2,7 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import React, { useContext } from "react";
 import { AppContext } from "../../App";
 import "./TodoList.css";
+import { actionTypes } from "../../App";
 
 export function TodoList() {
   const { state, dispatch } = useContext(AppContext);
@@ -22,18 +23,29 @@ export function TodoList() {
     }
   });
 
+  // useCallback, useMemo
+  // useCallback(() => {}, state.status // dpendency)
+
   return (
     <>
       <input
         type="text"
         className="newInput"
         placeholder="What needs to be done?"
-        onKeyDown={(event) => dispatch({ type: "CREATE_TASK", content: event })}
+        onKeyDown={(event) => {
+          if (event.target.value.length > 0 && event.key === "Enter") {
+            dispatch({
+              type: actionTypes.CREATE_TASK,
+              payload: event.target.value,
+            });
+            event.target.value = "";
+          }
+        }}
         autoFocus
       />
 
-      {filteredTodos.map((eachTodo) => {
-        return <Todo eachTodo={eachTodo} key={eachTodo.id} />;
+      {filteredTodos.map((eachTodo, index) => {
+        return <Todo eachTodo={eachTodo} key={index} />;
       })}
 
       <div className="footerContainer">
@@ -49,13 +61,17 @@ export function TodoList() {
         <div className="buttonContainer">
           <button
             className={state.status === "all" ? "button active" : "button"}
-            onClick={() => dispatch({ type: "ClICK_ALL" })}
+            onClick={() =>
+              dispatch({ type: actionTypes.CHANGE_FILTER, payload: "all" })
+            }
           >
             All
           </button>
           <button
             className={state.status === "active" ? "button active" : "button"}
-            onClick={() => dispatch({ type: "ClICK_ACTIVE" })}
+            onClick={() =>
+              dispatch({ type: actionTypes.CHANGE_FILTER, payload: "active" })
+            }
           >
             Actives
           </button>
@@ -63,7 +79,12 @@ export function TodoList() {
             className={
               state.status === "completed" ? "button active" : "button"
             }
-            onClick={() => dispatch({ type: "ClICK_COMPLETED" })}
+            onClick={() =>
+              dispatch({
+                type: actionTypes.CHANGE_FILTER,
+                payload: "completed",
+              })
+            }
           >
             Completed
           </button>
@@ -75,7 +96,6 @@ export function TodoList() {
 
 function Todo({ eachTodo }) {
   const { dispatch } = useContext(AppContext);
-
   // ----------------------------------------------------------------
   // Prevent line break when I click the enter key
   // ----------------------------------------------------------------
@@ -92,7 +112,10 @@ function Todo({ eachTodo }) {
           type="checkbox"
           checked={eachTodo.isCompleted}
           onChange={() =>
-            dispatch({ type: "HANDLE_CHECKBOX", content: eachTodo })
+            dispatch({
+              type: actionTypes.TOGGLE_TASK_ISCOMPLETED,
+              payload: eachTodo,
+            })
           }
         />
         <label
@@ -100,9 +123,11 @@ function Todo({ eachTodo }) {
           suppressContentEditableWarning={true}
           onBlur={(event) =>
             dispatch({
-              type: "REEDIT_TASK",
-              content: event,
-              content2: eachTodo.id,
+              type: actionTypes.EDIT_TASK,
+              payload: {
+                value: event.target.textContent,
+                id: eachTodo.id,
+              },
             })
           }
           onKeyDown={preventDefault}
@@ -112,7 +137,9 @@ function Todo({ eachTodo }) {
       </div>
       <button
         className="removeButton"
-        onClick={() => dispatch({ type: "REMOVE_TASK", content: eachTodo.id })}
+        onClick={() =>
+          dispatch({ type: actionTypes.REMOVE_TASK, payload: eachTodo.id })
+        }
       >
         <HiOutlineXMark />
       </button>
