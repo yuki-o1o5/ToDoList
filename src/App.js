@@ -43,8 +43,9 @@ const appStateReducer = (state, action) => {
       return { todos: updatedTodosByToggle };
 
     // eslint-disable-next-line no-duplicate-case
-    case actionTypes.TOGGLE_TASK_ISCOMPLETED:
-      if (!action.payload.value.length) {
+    case actionTypes.EDIT_TASK:
+      console.log(action.payload.value);
+      if (action.payload.value.length < 0) {
         const updatedTodosByRemove = state.todos.filter(
           (todo) => todo.id !== action.payload.id
         );
@@ -54,6 +55,7 @@ const appStateReducer = (state, action) => {
         const updatedTodosByReEdit = state.todos.map((todo) =>
           todo.id === action.payload.id ? { todo, name: reEditTaskName } : todo
         );
+        console.log(updatedTodosByReEdit, "edit");
         return { todos: updatedTodosByReEdit };
       }
 
