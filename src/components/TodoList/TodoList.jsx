@@ -1,12 +1,11 @@
 import { HiOutlineXMark } from "react-icons/hi2";
-import React, { useState, useCallback, useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { AppContext } from "../../App";
 import "./TodoList.css";
 import { actionTypes } from "../../App";
 
 export function TodoList() {
   const { state, dispatch } = useContext(AppContext);
-  const [inputValue, setInputValue] = useState("");
 
   // ----------------------------------------------------------------
   // Change todos by the status
@@ -14,7 +13,7 @@ export function TodoList() {
   // todos.isCompleted = true  => "completed"
   // ----------------------------------------------------------------
 
-  const updatedTodos = useCallback(() => {
+  const filteredTodos = useMemo(() => {
     return state.todos.filter((todo) => {
       if (state.status === "active") {
         return !todo.isCompleted;
@@ -26,42 +25,19 @@ export function TodoList() {
     });
   }, [state.status, state.todos]);
 
-  const filteredTodos = updatedTodos();
-
-  // const filteredTodos = state.todos.filter((todo) => {
-  //   if (state.status === "active") {
-  //     return !todo.isCompleted;
-  //   } else if (state.status === "completed") {
-  //     return todo.isCompleted;
-  //   } else {
-  //     return true;
-  //   }
-  // });
-
-  // useCallback, useMemo
-  // useCallback(() => {}, state.status // dpendency)
-
   return (
     <>
       <input
         type="text"
         className="newInput"
         placeholder="What needs to be done?"
-        // add============================================================
-        value={inputValue}
-        onChange={(event) => {
-          setInputValue(event.target.value); // Update the state when the input value changes
-        }}
-        // ============================================================
-
         onKeyDown={(event) => {
           if (event.target.value.length > 0 && event.key === "Enter") {
             dispatch({
               type: actionTypes.CREATE_TASK,
               payload: event.target.value,
             });
-            setInputValue("");
-            // event.target.value = "";
+            event.target.value = "";
           }
         }}
         autoFocus
@@ -120,10 +96,6 @@ export function TodoList() {
 function Todo({ eachTodo }) {
   const { dispatch } = useContext(AppContext);
 
-  // add ========================================================
-  const [editedName, setEditedName] = useState(eachTodo.name);
-  // ============================================================
-
   // ----------------------------------------------------------------
   // Prevent line break when I click the enter key
   // ----------------------------------------------------------------
@@ -149,31 +121,18 @@ function Todo({ eachTodo }) {
         <label
           contentEditable={true}
           suppressContentEditableWarning={true}
-          //   onBlur={(event) =>
-          //     dispatch({
-          //       type: actionTypes.EDIT_TASK,
-          //       payload: {
-          //         value: event.target.textContent,
-          //         id: eachTodo.id,
-          //       },
-          //     })
-          //   }
-          //   onKeyDown={preventDefault}
-          // >
-          //   {eachTodo.name}
-          onBlur={() => {
+          onBlur={(event) =>
             dispatch({
               type: actionTypes.EDIT_TASK,
               payload: {
-                value: editedName,
+                value: event.target.textContent,
                 id: eachTodo.id,
               },
-            });
-            setEditedName(eachTodo.name);
-          }}
+            })
+          }
           onKeyDown={preventDefault}
         >
-          {editedName}
+          {eachTodo.name}
         </label>
       </div>
       <button

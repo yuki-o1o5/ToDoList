@@ -26,7 +26,6 @@ const appStateReducer = (state, action) => {
       let myListName = action.payload;
       const newTodo = { id: uuidv4(), name: myListName, isCompleted: false };
       return { todos: [...state.todos, newTodo] };
-
     // eslint-disable-next-line no-fallthrough
     case actionTypes.REMOVE_TASK:
       const updatedTodosByRemove = state.todos.filter(
@@ -44,8 +43,7 @@ const appStateReducer = (state, action) => {
 
     // eslint-disable-next-line no-duplicate-case
     case actionTypes.EDIT_TASK:
-      console.log(action.payload.value);
-      if (action.payload.value.length < 0) {
+      if (action.payload.value.length === 0) {
         const updatedTodosByRemove = state.todos.filter(
           (todo) => todo.id !== action.payload.id
         );
@@ -53,9 +51,10 @@ const appStateReducer = (state, action) => {
       } else {
         const reEditTaskName = action.payload.value;
         const updatedTodosByReEdit = state.todos.map((todo) =>
-          todo.id === action.payload.id ? { todo, name: reEditTaskName } : todo
+          todo.id === action.payload.id
+            ? { ...todo, name: reEditTaskName }
+            : todo
         );
-        console.log(updatedTodosByReEdit, "edit");
         return { todos: updatedTodosByReEdit };
       }
 
@@ -90,3 +89,7 @@ export function App() {
     </div>
   );
 }
+
+// const item = localStorage.getItem("tasks");
+// const existingData = item ? JSON.parse(item) : [];
+// localStorage.setItem("tasks", JSON.stringify([...existingData, newTodo]));
