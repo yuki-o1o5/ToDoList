@@ -16,7 +16,7 @@ export const actionTypes = {
 };
 
 const initialState = {
-  todos: [],
+  todos: JSON.parse(localStorage.getItem("tasks")) || [],
   status: "all",
 };
 
@@ -28,37 +28,21 @@ const appStateReducer = (state, action) => {
         name: action.payload,
         isCompleted: false,
       };
-
-      const myCurrentTasksBeforeCreate = localStorage.getItem("tasks");
-      const myUpdatedTasksBeforeCreate = myCurrentTasksBeforeCreate
-        ? JSON.parse(myCurrentTasksBeforeCreate)
-        : [];
-      localStorage.setItem(
-        "tasks",
-        JSON.stringify([...myUpdatedTasksBeforeCreate, newTodo])
-      );
-      // console.log(JSON.parse(localStorage.getItem("tasks")));
+      localStorage.setItem("tasks", JSON.stringify([...state.todos, newTodo]));
       const myTodosByCreate = JSON.parse(localStorage.getItem("tasks"));
-
       return { todos: myTodosByCreate };
 
     // eslint-disable-next-line no-fallthrough
     case actionTypes.REMOVE_TASK:
-      const myCurrentTasksBeforeRemove = localStorage.getItem("tasks");
-      const myUpdatedTasksBeforeRemove = JSON.parse(myCurrentTasksBeforeRemove);
-      const myTasksByRemove = myUpdatedTasksBeforeRemove.filter(
+      const myTasksByRemove = state.todos.filter(
         (todo) => todo.id !== action.payload
       );
       localStorage.setItem("tasks", JSON.stringify(myTasksByRemove));
       const myTodosByRemove = JSON.parse(localStorage.getItem("tasks"));
-
-      // console.log(updatedTodosByRemove)
       return { todos: myTodosByRemove };
 
     case actionTypes.TOGGLE_TASK_ISCOMPLETED:
-      const myCurrentTasksBeforeToggle = localStorage.getItem("tasks");
-      const myUpdatedTasksBeforeToggle = JSON.parse(myCurrentTasksBeforeToggle);
-      const myTasksByToggle = myUpdatedTasksBeforeToggle.map((todo) =>
+      const myTasksByToggle = state.todos.map((todo) =>
         todo.id === action.payload.id
           ? { ...todo, isCompleted: !action.payload.isCompleted }
           : todo
@@ -69,10 +53,8 @@ const appStateReducer = (state, action) => {
 
     // eslint-disable-next-line no-duplicate-case
     case actionTypes.EDIT_TASK:
-      const myCurrentTasksBeforeEdit = localStorage.getItem("tasks");
-      const myUpdatedTasksBeforeEdit = JSON.parse(myCurrentTasksBeforeEdit);
       if (action.payload.value.length === 0) {
-        const myTasksByRemove = myUpdatedTasksBeforeEdit.filter(
+        const myTasksByRemove = state.todos.filter(
           (todo) => todo.id !== action.payload.id
         );
         localStorage.setItem("tasks", JSON.stringify(myTasksByRemove));
@@ -80,14 +62,13 @@ const appStateReducer = (state, action) => {
         return { todos: myTodosByEditRemove };
       } else {
         const reEditTaskName = action.payload.value;
-        const myTasksByEdit = myUpdatedTasksBeforeEdit.map((todo) =>
+        const myTasksByEdit = state.todos.map((todo) =>
           todo.id === action.payload.id
             ? { ...todo, name: reEditTaskName }
             : todo
         );
         localStorage.setItem("tasks", JSON.stringify(myTasksByEdit));
         const myTodosByEdit = JSON.parse(localStorage.getItem("tasks"));
-
         return { todos: myTodosByEdit };
       }
 

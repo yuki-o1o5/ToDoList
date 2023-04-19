@@ -14,11 +14,7 @@ export function TodoList() {
   // ----------------------------------------------------------------
 
   const filteredTodos = useMemo(() => {
-    const myCurrentTasks = localStorage.getItem("tasks");
-    const myUpdatedTasksBeforeCreate = myCurrentTasks
-      ? JSON.parse(myCurrentTasks)
-      : [];
-    return myUpdatedTasksBeforeCreate.filter((todo) => {
+    return state.todos.filter((todo) => {
       if (state.status === "active") {
         return !todo.isCompleted;
       } else if (state.status === "completed") {
@@ -27,7 +23,7 @@ export function TodoList() {
         return true;
       }
     });
-  }, [state.status]);
+  }, [state.status, state.todos]);
 
   return (
     <>
