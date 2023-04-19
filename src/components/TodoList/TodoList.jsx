@@ -15,7 +15,9 @@ export function TodoList() {
 
   const filteredTodos = useMemo(() => {
     const myCurrentTasks = localStorage.getItem("tasks");
-    const myUpdatedTasksBeforeCreate = JSON.parse(myCurrentTasks);
+    const myUpdatedTasksBeforeCreate = myCurrentTasks
+      ? JSON.parse(myCurrentTasks)
+      : [];
     return myUpdatedTasksBeforeCreate.filter((todo) => {
       if (state.status === "active") {
         return !todo.isCompleted;
