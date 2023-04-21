@@ -30,7 +30,10 @@ const appStateReducer = (state, action) => {
       };
       localStorage.setItem("tasks", JSON.stringify([...state.todos, newTodo]));
       const myTodosByCreate = JSON.parse(localStorage.getItem("tasks"));
-      return { todos: myTodosByCreate };
+      return {
+        ...state,
+        todos: myTodosByCreate,
+      };
 
     // eslint-disable-next-line no-fallthrough
     case actionTypes.REMOVE_TASK:
@@ -38,8 +41,11 @@ const appStateReducer = (state, action) => {
         (todo) => todo.id !== action.payload
       );
       localStorage.setItem("tasks", JSON.stringify(myTasksByRemove));
-      const myTodosByRemove = JSON.parse(localStorage.getItem("tasks"));
-      return { todos: myTodosByRemove };
+      // const myTodosByRemove = JSON.parse(localStorage.getItem("tasks"));
+      return {
+        ...state,
+        todos: myTasksByRemove,
+      };
 
     case actionTypes.TOGGLE_TASK_ISCOMPLETED:
       const myTasksByToggle = state.todos.map((todo) =>
@@ -49,7 +55,7 @@ const appStateReducer = (state, action) => {
       );
       localStorage.setItem("tasks", JSON.stringify(myTasksByToggle));
       const myTodosByToggle = JSON.parse(localStorage.getItem("tasks"));
-      return { todos: myTodosByToggle };
+      return { ...state, todos: myTodosByToggle };
 
     // eslint-disable-next-line no-duplicate-case
     case actionTypes.EDIT_TASK:
@@ -59,7 +65,7 @@ const appStateReducer = (state, action) => {
         );
         localStorage.setItem("tasks", JSON.stringify(myTasksByRemove));
         const myTodosByEditRemove = JSON.parse(localStorage.getItem("tasks"));
-        return { todos: myTodosByEditRemove };
+        return { ...state, todos: myTodosByEditRemove };
       } else {
         const reEditTaskName = action.payload.value;
         const myTasksByEdit = state.todos.map((todo) =>
@@ -69,7 +75,7 @@ const appStateReducer = (state, action) => {
         );
         localStorage.setItem("tasks", JSON.stringify(myTasksByEdit));
         const myTodosByEdit = JSON.parse(localStorage.getItem("tasks"));
-        return { todos: myTodosByEdit };
+        return { ...state, todos: myTodosByEdit };
       }
 
     case actionTypes.CHANGE_FILTER:
